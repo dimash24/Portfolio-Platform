@@ -24,8 +24,10 @@ router.post('/create', roleMiddleware('editor'), upload.array('images', 3), asyn
   const { title, description } = req.body;
   const images = req.files.map(file => file.path);
   await Portfolio.create({ title, description, images });
+  console.log('Redirecting back to admin page...');
   res.redirect('/portfolio/admin');
 });
+
 
 router.post('/update/:id', roleMiddleware('admin'), async (req, res) => {
   const { title, description } = req.body;
