@@ -20,9 +20,9 @@ router.get('/admin', roleMiddleware('admin'), async (req, res) => {
   res.render('portfolio/admin', { items });
 });
 
-router.post('/create', roleMiddleware('admin'), upload.array('images', 3), async (req, res) => {
+router.post('/create', roleMiddleware('editor'), upload.array('images', 3), async (req, res) => {
   const { title, description } = req.body;
-  const images = req.files.map(file => `uploads/${file.filename}`);
+  const images = req.files.map(file => file.path);
   await Portfolio.create({ title, description, images });
   res.redirect('/portfolio/admin');
 });
@@ -37,6 +37,7 @@ router.post('/delete/:id', roleMiddleware('admin'), async (req, res) => {
   await Portfolio.findByIdAndDelete(req.params.id);
   res.redirect('/portfolio/admin');
 });
+
 
 router.get('/editor', roleMiddleware('editor'), async (req, res) => {
   res.render('portfolio/editor');

@@ -11,56 +11,68 @@
   <%- include('../partials/nav') %>
 
   <div class="container mt-4">
-    <h1>Admin: Manage Portfolio Items</h1>
+    <h1 class="text-center mb-4">Admin: Manage Portfolio Items</h1>
 
-    <div class="mb-4">
-      <h2>Create Portfolio Item</h2>
+    <div class="card p-4 mb-4 shadow">
+      <h2 class="text-center">Create Portfolio Item</h2>
       <form action="/portfolio/create" method="POST" enctype="multipart/form-data">
-        <input type="text" name="title" placeholder="Title" required>
-        <textarea name="description" placeholder="Description" rows="4" required></textarea>
-        <input type="file" name="images" multiple required>
-        <button type="submit" class="btn btn-primary">Add Item</button>
+        <div class="mb-3">
+          <input type="text" name="title" class="form-control" placeholder="Title" required>
+        </div>
+        <div class="mb-3">
+          <textarea name="description" class="form-control" placeholder="Description" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+          <input type="file" name="images" multiple class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Add Item</button>
       </form>
     </div>
 
     <div>
-      <h2>Existing Portfolio Items</h2>
+      <h2 class="mb-4">Existing Portfolio Items</h2>
       <% items.forEach(item => { %>
-        <div class="mb-4">
-          <h3><%= item.title %></h3>
-          <p><%= item.description %></p>
-          <p>Created: <%= item.createdAt.toDateString() %></p>
-          <p>Updated: <%= item.updatedAt ? item.updatedAt.toDateString() : 'N/A' %></p>
+        <div class="card mb-4 shadow">
+          <div class="card-body">
+            <h3 class="card-title"><%= item.title %></h3>
+            <p class="card-text"><%= item.description %></p>
+            <p>Created: <%= item.createdAt.toDateString() %></p>
+            <p>Updated: <%= item.updatedAt ? item.updatedAt.toDateString() : 'N/A' %></p>
 
-          <% if (item.images && item.images.length > 0) { %>
-            <div id="carousel<%= item._id %>" class="carousel slide" data-bs-ride="carousel">
-              <div class="carousel-inner">
-                <% item.images.forEach((image, index) => { %>
-                  <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                    <img src="/<%= image %>" class="d-block w-100" alt="<%= item.title %>">
-                  </div>
-                <% }) %>
+            <% if (item.images && item.images.length > 0) { %>
+              <div id="carousel<%= item._id %>" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <% item.images.forEach((image, index) => { %>
+                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                      <img src="/<%= image %>" class="d-block w-100 rounded" alt="<%= item.title %>">
+                    </div>
+                  <% }) %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= item._id %>" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= item._id %>" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
               </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= item._id %>" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= item._id %>" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-          <% } %>
+            <% } %>
 
-          <form action="/portfolio/update/<%= item._id %>" method="POST" class="mt-2">
-            <input type="text" name="title" value="<%= item.title %>" placeholder="Update Title" required>
-            <textarea name="description" rows="3" placeholder="Update Description" required><%= item.description %></textarea>
-            <button type="submit" class="btn btn-success">Update</button>
-          </form>
+            <form action="/portfolio/update/<%= item._id %>" method="POST" class="mb-3">
+              <div class="mb-3">
+                <input type="text" name="title" class="form-control" value="<%= item.title %>" placeholder="Update Title" required>
+              </div>
+              <div class="mb-3">
+                <textarea name="description" class="form-control" rows="3" placeholder="Update Description" required><%= item.description %></textarea>
+              </div>
+              <button type="submit" class="btn btn-success w-100">Update</button>
+            </form>
 
-          <form action="/portfolio/delete/<%= item._id %>" method="POST" class="mt-2">
-            <button type="submit" class="btn btn-danger">Delete</button>
-          </form>
+            <form action="/portfolio/delete/<%= item._id %>" method="POST">
+              <button type="submit" class="btn btn-danger w-100">Delete</button>
+            </form>
+          </div>
         </div>
       <% }) %>
     </div>
