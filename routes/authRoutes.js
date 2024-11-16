@@ -38,6 +38,7 @@ router.get('/login', (req, res) => res.render('auth/login'));
 router.post('/login', async (req, res) => {
   const { username, password, token } = req.body;
   const user = await User.findOne({ username });
+  
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).send('Invalid credentials');
   }
