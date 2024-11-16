@@ -14,13 +14,11 @@ const apiRoutes = require('./routes/apiRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
-// Session setup
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -30,28 +28,21 @@ app.use(
   })
 );
 
-// Make the user session available globally in views
 app.use((req, res, next) => {
   res.locals.user = req.session ? req.session.user : null;
   next();
 });
 
-
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-
-
-// Routes
 app.use('/auth', authRoutes);
 app.use('/portfolio', portfolioRoutes);
 app.use('/api', apiRoutes);
 
-// Home route
 app.get('/', (req, res) => {
   res.render('main', { user: req.session.user });
 });
 
-// Start the server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

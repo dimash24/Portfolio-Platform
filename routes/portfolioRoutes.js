@@ -38,7 +38,6 @@ router.post('/delete/:id', roleMiddleware('admin'), async (req, res) => {
   res.redirect('/portfolio/admin');
 });
 
-
 router.get('/editor', roleMiddleware('editor'), async (req, res) => {
   res.render('portfolio/editor');
 });
