@@ -1,9 +1,9 @@
 const express = require('express');
 const Portfolio = require('../models/Portfolio');
+const roleMiddleware = require('../utils/roleMiddleware'); // Correctly import the middleware
 const multer = require('multer');
-const { roleMiddleware } = require('../utils/roleMiddleware');
-const router = express.Router();
 const path = require('path');
+const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: 'public/uploads/',
