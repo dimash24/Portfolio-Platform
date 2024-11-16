@@ -1,14 +1,14 @@
 const express = require('express');
 const Portfolio = require('../models/Portfolio');
-const roleMiddleware = require('../utils/roleMiddleware'); // Correctly import the middleware
 const multer = require('multer');
-const path = require('path');
+const roleMiddleware = require('../utils/roleMiddleware');
 const router = express.Router();
+const path = require('path');
 
 const storage = multer.diskStorage({
   destination: 'public/uploads/',
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, `${uniqueSuffix}${path.extname(file.originalname)}`);
   },
 });
@@ -24,10 +24,8 @@ router.post('/create', roleMiddleware('editor'), upload.array('images', 3), asyn
   const { title, description } = req.body;
   const images = req.files.map(file => file.path);
   await Portfolio.create({ title, description, images });
-  console.log('Redirecting back to admin page...');
   res.redirect('/portfolio/admin');
 });
-
 
 router.post('/update/:id', roleMiddleware('admin'), async (req, res) => {
   const { title, description } = req.body;

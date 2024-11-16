@@ -1,25 +1,22 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { sendEmail } = require('../utils/email');
-const User = require('../models/User');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
+const User = require('../models/User');
 const router = express.Router();
 
 router.get('/register', (req, res) => res.render('auth/register'));
 
 router.post('/register', async (req, res) => {
-  console.log('Register POST request received with data:', req.body);
   try {
-    const { username, email, password, firstName, lastName, age, gender, role } = req.body;
+    const { username, email, password, firstName, lastName, age, gender } = req.body;
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
-      return res.status(400).send('Username or email already exists. Please choose another.');
+      return res.status(400).send('Username or email already exists.');
     }
 
     const secret = speakeasy.generateSecret({ length: 20 });
-
     const newUser = new User({
       username,
       email,
@@ -28,25 +25,17 @@ router.post('/register', async (req, res) => {
       lastName,
       age,
       gender,
+      role: 'editor', // Default role
       twoFactorSecret: secret.base32,
       is2FAEnabled: true,
-      role: role || 'editor', // Default to editor if role is not selected
     });
 
     await newUser.save();
-    console.log('User successfully registered:', username);
-
-    const otpauthURL = secret.otpauth_url;
-    const dataUrl = await qrcode.toDataURL(otpauthURL);
-
-    await sendEmail(email, 'Welcome to Portfolio Platform', 'Thank you for registering!');
+    const dataUrl = await qrcode.toDataURL(secret.otpauth_url);
     res.render('auth/2fa-setup', { qrCodeImage: dataUrl });
   } catch (error) {
-    console.error('Error during registration:', error);
-    if (error.code === 11000) {
-      return res.status(400).send('Username or email already exists. Please choose another.');
-    }
-    res.status(500).send('Registration failed. Please try again.');
+    console.error(error);
+    res.status(500).send('Error during registration.');
   }
 });
 
@@ -75,11 +64,8 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('Error logging out:', err);
-      return res.status(500).send('Error logging out.');
-    }
+  req.session.destroy(err => {
+    if (err) return res.status(500).send('Error logging out.');
     res.redirect('/auth/login');
   });
 });

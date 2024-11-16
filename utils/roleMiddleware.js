@@ -1,6 +1,5 @@
 function roleMiddleware(role) {
   return (req, res, next) => {
-    console.log('Session User:', req.session.user);
     if (req.session.user && req.session.user.role === role) {
       return next();
     }
