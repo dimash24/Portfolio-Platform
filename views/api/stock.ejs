@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Stock Data</title>
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <div class="container">
+    <h1>Stock Data</h1>
+
+    <% if (stockData && stockData.quoteSummary && stockData.quoteSummary.result) { %>
+      <% const result = stockData.quoteSummary.result[0]; %>
+      <h2>Company Information</h2>
+      <p><strong>Name:</strong> <%= result.assetProfile.longBusinessSummary %></p>
+      <p><strong>Industry:</strong> <%= result.assetProfile.industry %></p>
+      <p><strong>Website:</strong> <a href="<%= result.assetProfile.website %>" target="_blank"><%= result.assetProfile.website %></a></p>
+      
+      <h2>Company Officers</h2>
+      <ul>
+        <% result.assetProfile.companyOfficers.forEach(officer => { %>
+          <li>
+            <p><strong>Name:</strong> <%= officer.name %></p>
+            <p><strong>Title:</strong> <%= officer.title %></p>
+            <p><strong>Total Pay:</strong> <%= officer.totalPay ? officer.totalPay.fmt : 'N/A' %></p>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No stock data available.</p>
+    <% } %>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+</html>

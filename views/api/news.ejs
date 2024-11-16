@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>News Front Page</title>
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <div class="container">
+    <h1>News Front Page</h1>
+
+    <% if (frontPage) { %>
+      <h2><%= frontPage.name %> (<%= frontPage.date %>)</h2>
+      <img src="<%= frontPage.image %>" alt="Front Page" style="max-width: 100%; height: auto;">
+    <% } else { %>
+      <p>No news front page available at the moment.</p>
+    <% } %>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+</html>

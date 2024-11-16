@@ -1,0 +1,15 @@
+<nav>
+  <a href="/">Home</a>
+  <% if (user) { %>
+    <a href="/auth/logout">Logout</a>
+    <% if (user.role === 'admin') { %>
+      <a href="/portfolio/admin">Admin</a>
+    <% } %>
+    <% if (user.role === 'editor') { %>
+      <a href="/portfolio/editor">Editor</a>
+    <% } %>
+  <% } else { %>
+    <a href="/auth/login">Login</a>
+    <a href="/auth/register">Register</a>
+  <% } %>
+</nav>

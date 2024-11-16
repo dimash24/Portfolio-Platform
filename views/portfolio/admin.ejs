@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Admin - Manage Portfolio</title>
+  <style>
+    
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .form-container h2 {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .form-container input,
+    .form-container textarea,
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .form-container button {
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .form-container button:hover {
+      background-color: #555;
+    }
+
+    .portfolio-list {
+      margin: 20px auto;
+      max-width: 800px;
+    }
+
+    .portfolio-item {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .portfolio-item h3 {
+      margin: 0 0 10px 0;
+    }
+
+    .portfolio-item img {
+      max-width: 100px;
+      margin-right: 10px;
+      border-radius: 5px;
+    }
+
+    .portfolio-item-actions {
+      margin-top: 15px;
+    }
+
+    .portfolio-item-actions form {
+      display: inline-block;
+    }
+
+    .portfolio-item-actions button {
+      padding: 8px 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .portfolio-item-actions button.delete {
+      background-color: #dc3545;
+    }
+
+    .portfolio-item-actions button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/nav') %>
+
+  <div class="container">
+    <h1>Admin: Manage Portfolio Items</h1>
+
+    <!-- Form to Create New Portfolio Item -->
+    <div class="form-container">
+      <h2>Create Portfolio Item</h2>
+      <form action="/portfolio/create" method="POST" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Title" required>
+        <textarea name="description" placeholder="Description" rows="4" required></textarea>
+        <input type="file" name="images" multiple required>
+        <button type="submit">Add Item</button>
+      </form>
+    </div>
+
+    
+    <div class="portfolio-list">
+      <h2>Existing Portfolio Items</h2>
+      <% items.forEach(item => { %>
+        <div class="portfolio-item">
+          <h3><%= item.title %></h3>
+          <p><%= item.description %></p>
+          <p>Created: <%= item.createdAt.toDateString() %></p>
+          <p>Updated: <%= item.updatedAt ? item.updatedAt.toDateString() : 'N/A' %></p>
+
+          
+          <% if (item.images && item.images.length > 0) { %>
+            <div>
+              <% item.images.forEach(image => { %>
+                <img src="/<%= image %>" alt="<%= item.title %>" style="max-width: 100px; height: auto; border-radius: 5px;">
+              <% }) %>
+            </div>
+          <% } %>
+
+         
+          <div class="portfolio-item-actions">
+            <form action="/portfolio/update/<%= item._id %>" method="POST">
+              <input type="text" name="title" value="<%= item.title %>" placeholder="Update Title" required>
+              <textarea name="description" placeholder="Update Description" rows="4" required><%= item.description %></textarea>
+              <button type="submit">Update</button>
+            </form>
+            <form action="/portfolio/delete/<%= item._id %>" method="POST">
+              <button type="submit" class="delete">Delete</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

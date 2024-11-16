@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Portfolio</title>
+</head>
+<body>
+  <%- include('./partials/header') %>
+  <%- include('./partials/nav') %>
+
+  <div class="container">
+    <h1>Portfolio Items</h1>
+
+    <% items.forEach(item => { %>
+      <div class="portfolio-item">
+        <h2><%= item.title %></h2>
+        <p><%= item.description %></p>
+        
+        <!-- Image Carousel -->
+        <div class="carousel">
+          <% item.images.forEach((image, index) => { %>
+            <div class="carousel-slide <%= index === 0 ? 'active' : '' %>">
+              <img src="/uploads/<%= image %>" alt="Portfolio Image">
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <script src="/js/scripts.js"></script>
+  <%- include('./partials/footer') %>
+</body>
+</html>

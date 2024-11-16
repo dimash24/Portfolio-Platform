@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Main Page</title>
+</head>
+<body>
+  <%- include('./partials/nav') %>
+  <div class="container">
+    <h1>Welcome to the Portfolio Platform!</h1>
+
+    <% if (user) { %>
+      <p>Hello, <%= user.role %>!</p>
+      
+      <!-- Show content based on user role -->
+      <% if (user.role === 'admin') { %>
+        <h2>Admin Panel</h2>
+        <ul>
+          <li><a href="/portfolio/admin">Manage Portfolio Items</a></li>
+          <li><a href="/api/stock">View Stock Data</a></li>
+          <li><a href="/api/news">View News Articles</a></li>
+        </ul>
+      <% } else if (user.role === 'editor') { %>
+        <h2>Editor Panel</h2>
+        <ul>
+          <li><a href="/portfolio/editor">Create Portfolio Items</a></li>
+          <li><a href="/api/stock">View Stock Data</a></li>
+          <li><a href="/api/news">View News Articles</a></li>
+        </ul>
+      <% } else { %>
+        <h2>User Dashboard</h2>
+        <p>Browse the latest portfolio items and news updates!</p>
+      <% } %>
+    <% } else { %>
+      <p>Please <a href="/auth/login">log in</a> or <a href="/auth/register">register</a>.</p>
+    <% } %>
+  </div>
+  <%- include('./partials/footer') %>
+</body>
+</html>
