@@ -1,10 +1,10 @@
 const express = require('express');
 const Portfolio = require('../models/Portfolio');
 const multer = require('multer');
-const roleMiddleware = require('../utils/roleMiddleware');
 const router = express.Router();
 const path = require('path');
 
+// Настройка хранилища для Multer
 const storage = multer.diskStorage({
   destination: 'public/uploads/',
   filename: (req, file, cb) => {
@@ -15,38 +15,55 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get('/admin', roleMiddleware('admin'), async (req, res) => {
-  const items = await Portfolio.find();
-  res.render('portfolio/admin', { items });
-});
-
-
-router.post('/create', (req, res, next) => {
-  if (req.session.user && (req.session.user.role === 'editor' || req.session.user.role === 'admin')) {
-    return next();
+// Получение панели управления
+router.get('/admin', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    const items = await Portfolio.find();
+    return res.render('portfolio/admin', { items });
   }
   res.status(403).send('Access denied');
-}, upload.array('images', 3), async (req, res) => {
-  const { title, description } = req.body;
-  const images = req.files.map(file => file.path);
-
-  await Portfolio.create({ title, description, images });
-  res.redirect('/portfolio/admin');
 });
 
-router.post('/update/:id', roleMiddleware('admin'), async (req, res) => {
-  const { title, description } = req.body;
-  await Portfolio.findByIdAndUpdate(req.params.id, { title, description, updatedAt: new Date() });
-  res.redirect('/portfolio/admin');
+// Создание нового элемента
+router.post(
+  '/create',
+  upload.array('images', 3),
+  async (req, res) => {
+    if (req.session.user && (req.session.user.role === 'editor' || req.session.user.role === 'admin')) {
+      const { title, description } = req.body;
+      const images = req.files.map(file => file.path.replace('public/', '')); // Сохраняем относительный путь
+      await Portfolio.create({ title, description, images });
+      return res.redirect('/portfolio/admin');
+    }
+    res.status(403).send('Access denied');
+  }
+);
+
+
+router.post('/update/:id', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    const { title, description } = req.body;
+    await Portfolio.findByIdAndUpdate(req.params.id, { title, description, updatedAt: new Date() });
+    return res.redirect('/portfolio/admin');
+  }
+  res.status(403).send('Access denied');
 });
 
-router.post('/delete/:id', roleMiddleware('admin'), async (req, res) => {
-  await Portfolio.findByIdAndDelete(req.params.id);
-  res.redirect('/portfolio/admin');
+// Удаление элемента
+router.post('/delete/:id', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    await Portfolio.findByIdAndDelete(req.params.id);
+    return res.redirect('/portfolio/admin');
+  }
+  res.status(403).send('Access denied');
 });
 
-router.get('/editor', roleMiddleware('editor'), async (req, res) => {
-  res.render('portfolio/editor');
+// Рендеринг панели редактора
+router.get('/editor', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'editor') {
+    return res.render('portfolio/editor');
+  }
+  res.status(403).send('Access denied');
 });
 
 module.exports = router;
