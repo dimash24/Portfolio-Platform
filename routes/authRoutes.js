@@ -9,23 +9,17 @@ router.get('/register', (req, res) => res.render('auth/register'));
 
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, firstName, lastName, age, gender } = req.body;
+    const { username, email, password } = req.body;
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) {
-      return res.status(400).send('Username or email already exists.');
-    }
+    if (existingUser) return res.status(400).send('Username or email already exists.');
 
     const secret = speakeasy.generateSecret({ length: 20 });
     const newUser = new User({
       username,
       email,
       password,
-      firstName,
-      lastName,
-      age,
-      gender,
-      role: 'editor', // Default role
+      role: 'editor',
       twoFactorSecret: secret.base32,
       is2FAEnabled: true,
     });
@@ -64,7 +58,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-  req.session.destroy(err => {
+  req.session.destroy((err) => {
     if (err) return res.status(500).send('Error logging out.');
     res.redirect('/auth/login');
   });

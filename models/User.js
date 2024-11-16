@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, default: 'editor' },
   is2FAEnabled: { type: Boolean, default: false },
-  twoFactorSecret: String
+  twoFactorSecret: String,
 });
 
 UserSchema.pre('save', async function (next) {

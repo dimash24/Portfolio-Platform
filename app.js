@@ -19,7 +19,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
-// Session setup
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -29,27 +28,22 @@ app.use(
   })
 );
 
-// Middleware to make session user available in views
 app.use((req, res, next) => {
   res.locals.user = req.session ? req.session.user : null;
   next();
 });
 
-// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected!'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch((err) => console.error('MongoDB connection error:', err));
 
-// Routes
 app.use('/auth', authRoutes);
 app.use('/portfolio', portfolioRoutes);
 app.use('/api', apiRoutes);
 
-// Default Route
 app.get('/', (req, res) => {
   res.render('main', { user: req.session.user });
 });
 
-// Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
