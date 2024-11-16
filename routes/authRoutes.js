@@ -9,7 +9,7 @@ router.get('/register', (req, res) => res.render('auth/register'));
 
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) return res.status(400).send('Username or email already exists.');
@@ -19,6 +19,7 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password,
+      role: role || 'editor', // Default role
       twoFactorSecret: secret.base32,
       is2FAEnabled: true,
     });
@@ -52,7 +53,7 @@ router.post('/login', async (req, res) => {
     }
   }
 
-  req.session.user = { id: user._id };
+  req.session.user = { id: user._id, role: user.role };
   res.redirect('/');
 });
 
