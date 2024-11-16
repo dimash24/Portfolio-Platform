@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,26 +13,15 @@
 
     <% if (user) { %>
       <p>Hello, <%= user.role %>!</p>
-      
-      <!-- Show content based on user role -->
+
       <% if (user.role === 'admin') { %>
-        <h2>Admin Panel</h2>
-        <ul>
-          <li><a href="/portfolio/admin">Manage Portfolio Items</a></li>
-          <li><a href="/api/stock">View Stock Data</a></li>
-          <li><a href="/api/news">View News Articles</a></li>
-        </ul>
+        <a href="/portfolio/admin" class="btn btn-primary">Manage Portfolio</a>
       <% } else if (user.role === 'editor') { %>
-        <h2>Editor Panel</h2>
-        <ul>
-          <li><a href="/portfolio/editor">Create Portfolio Items</a></li>
-          <li><a href="/api/stock">View Stock Data</a></li>
-          <li><a href="/api/news">View News Articles</a></li>
-        </ul>
-      <% } else { %>
-        <h2>User Dashboard</h2>
-        <p>Browse the latest portfolio items and news updates!</p>
+        <a href="/portfolio/editor" class="btn btn-primary">Create Portfolio Items</a>
       <% } %>
+
+      <a href="/api/stock" class="btn btn-secondary">View Stock Data</a>
+      <a href="/api/news" class="btn btn-secondary">View News Articles</a>
     <% } else { %>
       <p>Please <a href="/auth/login">log in</a> or <a href="/auth/register">register</a>.</p>
     <% } %>

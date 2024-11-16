@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const PortfolioSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: String,
-  images: [String], // Array of image paths
+  images: [String],
   createdAt: { type: Date, default: Date.now },
   updatedAt: Date
 });

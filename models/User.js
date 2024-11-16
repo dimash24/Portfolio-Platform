@@ -3,17 +3,12 @@ const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true }, // Added email field with unique constraint
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  firstName: String,
-  lastName: String,
-  age: Number,
-  gender: String,
   role: { type: String, default: 'editor' },
   is2FAEnabled: { type: Boolean, default: false },
   twoFactorSecret: String
 });
-
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
