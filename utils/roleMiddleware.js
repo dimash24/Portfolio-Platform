@@ -3,7 +3,8 @@ function roleMiddleware(role) {
       if (req.session.user && req.session.user.role === role) {
         return next();
       }
-      res.status(403).send('Access denied');
+      res.redirect('/auth/login'); 
+
     };
   }
   
