@@ -29,14 +29,14 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  res.locals.user = req.session ? req.session.user : null;
+  res.locals.user = req.session.user || null;
   next();
 });
 
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected!'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .catch(err => console.error('MongoDB connection error:', err));
 
 app.use('/auth', authRoutes);
 app.use('/portfolio', portfolioRoutes);

@@ -5,7 +5,7 @@ const PortfolioSchema = new mongoose.Schema({
   description: String,
   images: [String],
   createdAt: { type: Date, default: Date.now },
-  updatedAt: Date,
+  updatedAt: Date
 });
 
 module.exports = mongoose.model('Portfolio', PortfolioSchema);
