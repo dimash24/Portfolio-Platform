@@ -49,9 +49,12 @@ router.post('/delete/:id', roleMiddleware('admin'), async (req, res) => {
   res.redirect('/portfolio/admin');
 });
 
-router.get('/editor', roleMiddleware('admin','editor'), async (req, res) => {
+
+router.get('/editor', roleMiddleware(['admin', 'editor']), async (req, res) => {
   const items = await Portfolio.find();
-  res.render('portfolio/editor, , { items }');
+  res.render('portfolio/editor', { items });
 });
+
+
 
 module.exports = router;
