@@ -12,7 +12,7 @@
   <div class="container mt-4">
     <h1 class="text-center mb-4">Admin: Manage Portfolio Items</h1>
 
-   
+    
     <form action="/portfolio/create" method="POST" enctype="multipart/form-data" class="mb-4">
       <div class="mb-3">
         <input type="text" name="title" class="form-control" placeholder="Title" required>
@@ -26,16 +26,16 @@
       <button type="submit" class="btn btn-primary w-100">Add Item</button>
     </form>
 
-  
+    
     <% items.forEach(item => { %>
       <div class="card mb-3">
         <div class="card-body">
           <h3><%= item.title %></h3>
           <p><%= item.description %></p>
           <% if (item.images && item.images.length > 0) { %>
-            <div class="carousel mb-3">
+            <div class="mb-3">
               <% item.images.forEach(image => { %>
-                <img src="/<%= image %>" class="img-thumbnail" alt="<%= item.title %>">
+                <img src="/<%= image %>" class="img-thumbnail mb-2" alt="<%= item.title %>">
               <% }) %>
             </div>
           <% } %>
