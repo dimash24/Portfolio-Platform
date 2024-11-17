@@ -19,8 +19,8 @@
         <% if (user.role === 'admin') { %>
           <a href="/portfolio/admin" class="btn btn-primary">Manage Portfolio</a>
         <% } %>
-        <% if (user.role === 'editor') { %>
-          <a href="/portfolio/editor" class="btn btn-primary">Go to Editor Panel</a> 
+        <% if (user.role === 'admin') { %>
+          <a href="/portfolio/editor" class="btn btn-primary">Editor Panel</a> 
         <% } %>
         <a href="/api/stock" class="btn btn-secondary">View Stock Data</a>
         <a href="/api/news" class="btn btn-secondary">View News Articles</a>
