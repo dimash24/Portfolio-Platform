@@ -12,7 +12,7 @@
   <div class="container mt-4">
     <h1 class="text-center mb-4">Admin: Manage Portfolio Items</h1>
 
-    <!-- Form to create new portfolio item -->
+    
     <form action="/portfolio/create" method="POST" enctype="multipart/form-data" class="mb-4">
       <div class="mb-3">
         <input type="text" name="title" class="form-control" placeholder="Title" required>
@@ -25,6 +25,7 @@
       </div>
       <button type="submit" class="btn btn-primary w-100">Add Item</button>
     </form>
+    
 
    
     <% items.forEach(item => { %>

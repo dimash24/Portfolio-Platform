@@ -10,6 +10,7 @@ dotenv.config();
 const authRoutes = require('./routes/authRoutes');
 const portfolioRoutes = require('./routes/portfolioRoutes');
 const apiRoutes = require('./routes/apiRoutes');
+const Portfolio = require('./models/Portfolio');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,12 +39,14 @@ mongoose
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+
 app.use('/auth', authRoutes);
 app.use('/portfolio', portfolioRoutes);
 app.use('/api', apiRoutes);
 
-app.get('/', (req, res) => {
-  res.render('main', { user: req.session.user });
+app.get('/', async (req, res) => {
+  const items = await Portfolio.find();
+  res.render('main', { user: req.session.user, items });
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
