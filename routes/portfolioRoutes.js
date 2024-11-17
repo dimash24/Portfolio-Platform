@@ -4,7 +4,7 @@ const multer = require('multer');
 const router = express.Router();
 const path = require('path');
 
-
+// Storage setup for file uploads
 const storage = multer.diskStorage({
   destination: 'public/uploads/',
   filename: (req, file, cb) => {
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Admin panel
+// Admin route (full CRUD: create, read, update, delete)
 router.get('/admin', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
     const items = await Portfolio.find();
@@ -25,49 +25,52 @@ router.get('/admin', async (req, res) => {
   }
 });
 
-
-router.post('/create', upload.array('images', 3), async (req, res) => {
-  if (req.session.user && (req.session.user.role === 'editor' || req.session.user.role === 'admin')) {
-    const { title, description } = req.body;
-    const images = req.files.map(file => `uploads/${file.filename}`);
-    try {
-      await Portfolio.create({ title, description, images });
-      res.redirect('/portfolio/admin');
-    } catch (err) {
-      console.error('Error creating item:', err);
-      res.status(500).send('Error creating item');
-    }
+// Editor route (only add items)
+router.get('/editor', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'editor') {
+    const items = await Portfolio.find(); // Editors can also view items
+    res.render('portfolio/editor', { items });
   } else {
     res.status(403).send('Access denied');
   }
 });
 
+// Create new item (accessible to both admin and editor)
+router.post('/create', upload.array('images', 3), async (req, res) => {
+  if (
+    req.session.user &&
+    (req.session.user.role === 'editor' || req.session.user.role === 'admin')
+  ) {
+    const { title, description } = req.body;
+    const images = req.files.map((file) => `uploads/${file.filename}`);
+    await Portfolio.create({ title, description, images });
+    return req.session.user.role === 'admin'
+      ? res.redirect('/portfolio/admin')
+      : res.redirect('/portfolio/editor');
+  }
+  res.status(403).send('Access denied');
+});
 
+// Update item (only for admin)
 router.post('/update/:id', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
     const { title, description } = req.body;
-    try {
-      await Portfolio.findByIdAndUpdate(req.params.id, { title, description, updatedAt: new Date() });
-      res.redirect('/portfolio/admin');
-    } catch (err) {
-      console.error('Error updating item:', err);
-      res.status(500).send('Error updating item');
-    }
+    await Portfolio.findByIdAndUpdate(req.params.id, {
+      title,
+      description,
+      updatedAt: new Date(),
+    });
+    res.redirect('/portfolio/admin');
   } else {
     res.status(403).send('Access denied');
   }
 });
 
-
+// Delete item (only for admin)
 router.post('/delete/:id', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
-    try {
-      await Portfolio.findByIdAndDelete(req.params.id);
-      res.redirect('/portfolio/admin');
-    } catch (err) {
-      console.error('Error deleting item:', err);
-      res.status(500).send('Error deleting item');
-    }
+    await Portfolio.findByIdAndDelete(req.params.id);
+    res.redirect('/portfolio/admin');
   } else {
     res.status(403).send('Access denied');
   }
