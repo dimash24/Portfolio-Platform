@@ -20,12 +20,23 @@ router.get('/admin', roleMiddleware('admin'), async (req, res) => {
   res.render('portfolio/admin', { items });
 });
 
-router.post('/create', upload.array('images', 3), async (req, res) => {
-  const { title, description } = req.body;
-  const images = req.files.map(file => file.path);
-  await Portfolio.create({ title, description, images });
-  res.redirect('/portfolio/admin');
-});
+router.post(
+  '/create',
+  (req, res, next) => {
+    if (req.session.user && ['admin', 'editor'].includes(req.session.user.role)) {
+      return next();
+    }
+    res.status(403).send('Access denied');
+  },
+  upload.array('images', 3),
+  async (req, res) => {
+    const { title, description } = req.body;
+    const images = req.files.map((file) => `uploads/${file.filename}`);
+    await Portfolio.create({ title, description, images });
+    res.redirect('/portfolio/editor'); 
+  }
+);
+
 
 router.post('/update/:id', roleMiddleware('admin'), async (req, res) => {
   const { title, description } = req.body;
@@ -39,7 +50,8 @@ router.post('/delete/:id', roleMiddleware('admin'), async (req, res) => {
 });
 
 router.get('/editor', roleMiddleware('editor'), async (req, res) => {
-  res.render('portfolio/editor');
+  const items = await Portfolio.find();
+  res.render('portfolio/editor, , { items }');
 });
 
 module.exports = router;

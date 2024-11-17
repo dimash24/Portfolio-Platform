@@ -12,7 +12,6 @@
   <div class="container mt-4">
     <h1 class="text-center">Editor Panel: Add Portfolio Items</h1>
 
-   
     <form action="/portfolio/create" method="POST" enctype="multipart/form-data" class="mb-4">
       <div class="mb-3">
         <input type="text" name="title" class="form-control" placeholder="Title" required>
@@ -26,14 +25,11 @@
       <button type="submit" class="btn btn-primary w-100">Add Item</button>
     </form>
 
-   
     <% items.forEach((item) => { %>
       <div class="card mb-4 shadow">
         <div class="card-body">
           <h3 class="card-title"><%= item.title %></h3>
           <p class="card-text"><%= item.description %></p>
-
-         
           <% if (item.images && item.images.length > 0) { %>
             <div id="carousel<%= item._id %>" class="carousel slide mb-3" data-bs-ride="carousel">
               <div class="carousel-inner">
