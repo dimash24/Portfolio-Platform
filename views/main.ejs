@@ -18,7 +18,8 @@
       <div class="d-flex justify-content-center gap-3">
         <% if (user.role === 'admin') { %>
           <a href="/portfolio/admin" class="btn btn-primary">Manage Portfolio</a>
-        <% } else if (user.role === 'editor') { %>
+        <% } %>
+        <% if (user.role === 'editor') { %>
           <a href="/portfolio/editor" class="btn btn-primary">Create Portfolio Items</a>
         <% } %>
         <a href="/api/stock" class="btn btn-secondary">View Stock Data</a>
@@ -29,28 +30,29 @@
     <% } %>
   </div>
 
-
-  <div class="d-flex justify-content-center align-items-center" ></div>
-  <div id="fixedCarousel" class="carousel slide w-50" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="/uploads/R.jpg" class="d-block w-100 rounded" alt="Image 1">
+  
+  <div class="d-flex justify-content-center align-items-center my-5">
+    <div id="fixedCarousel" class="carousel slide w-50" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="/uploads/R.jpg" class="d-block w-100 rounded" alt="Image 1">
+        </div>
+        <div class="carousel-item">
+          <img src="/uploads/S.jpg" class="d-block w-100 rounded" alt="Image 2">
+        </div>
+        <div class="carousel-item">
+          <img src="/uploads/T.jpg" class="d-block w-100 rounded" alt="Image 3">
+        </div>
       </div>
-      <div class="carousel-item">
-        <img src="/uploads/S.jpg" class="d-block w-100 rounded" alt="Image 2">
-      </div>
-      <div class="carousel-item">
-        <img src="/uploads/T.jpg" class="d-block w-100 rounded" alt="Image 3">
-      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#fixedCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#fixedCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#fixedCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#fixedCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
   </div>
 
   <%- include('./partials/footer') %>
