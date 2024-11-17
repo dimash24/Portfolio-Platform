@@ -20,7 +20,7 @@
           <a href="/portfolio/admin" class="btn btn-primary">Manage Portfolio</a>
         <% } %>
         <% if (user.role === 'editor') { %>
-          <a href="/portfolio/editor" class="btn btn-primary">Create Portfolio Items</a>
+          <a href="/portfolio/editor" class="btn btn-primary">Go to Editor Panel</a> 
         <% } %>
         <a href="/api/stock" class="btn btn-secondary">View Stock Data</a>
         <a href="/api/news" class="btn btn-secondary">View News Articles</a>
@@ -30,7 +30,6 @@
     <% } %>
   </div>
 
-  
   <div class="d-flex justify-content-center align-items-center my-5">
     <div id="fixedCarousel" class="carousel slide w-50" data-bs-ride="carousel">
       <div class="carousel-inner">
