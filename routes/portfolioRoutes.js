@@ -4,7 +4,7 @@ const multer = require('multer');
 const router = express.Router();
 const path = require('path');
 
-// Настройка хранилища для загрузки файлов
+// Storage for uploads
 const storage = multer.diskStorage({
   destination: 'public/uploads/',
   filename: (req, file, cb) => {
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Админ-панель
+// Admin panel
 router.get('/admin', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
     const items = await Portfolio.find();
@@ -25,28 +25,24 @@ router.get('/admin', async (req, res) => {
   }
 });
 
-// Создание нового элемента портфолио
-router.post(
-  '/create',
-  upload.array('images', 3),
-  async (req, res) => {
-    if (req.session.user && (req.session.user.role === 'editor' || req.session.user.role === 'admin')) {
-      const { title, description } = req.body;
-      const images = req.files.map(file => `uploads/${file.filename}`); // Формируем путь к файлам
-      try {
-        await Portfolio.create({ title, description, images });
-        res.redirect('/portfolio/admin');
-      } catch (err) {
-        console.error('Ошибка при создании элемента:', err);
-        res.status(500).send('Ошибка при создании элемента.');
-      }
-    } else {
-      res.status(403).send('Access denied');
+// Create a portfolio item
+router.post('/create', upload.array('images', 3), async (req, res) => {
+  if (req.session.user && (req.session.user.role === 'editor' || req.session.user.role === 'admin')) {
+    const { title, description } = req.body;
+    const images = req.files.map(file => `uploads/${file.filename}`);
+    try {
+      await Portfolio.create({ title, description, images });
+      res.redirect('/portfolio/admin');
+    } catch (err) {
+      console.error('Error creating item:', err);
+      res.status(500).send('Error creating item');
     }
+  } else {
+    res.status(403).send('Access denied');
   }
-);
+});
 
-// Обновление элемента
+// Update a portfolio item
 router.post('/update/:id', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
     const { title, description } = req.body;
@@ -54,23 +50,23 @@ router.post('/update/:id', async (req, res) => {
       await Portfolio.findByIdAndUpdate(req.params.id, { title, description, updatedAt: new Date() });
       res.redirect('/portfolio/admin');
     } catch (err) {
-      console.error('Ошибка при обновлении элемента:', err);
-      res.status(500).send('Ошибка при обновлении.');
+      console.error('Error updating item:', err);
+      res.status(500).send('Error updating item');
     }
   } else {
     res.status(403).send('Access denied');
   }
 });
 
-// Удаление элемента
+// Delete a portfolio item
 router.post('/delete/:id', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
     try {
       await Portfolio.findByIdAndDelete(req.params.id);
       res.redirect('/portfolio/admin');
     } catch (err) {
-      console.error('Ошибка при удалении элемента:', err);
-      res.status(500).send('Ошибка при удалении.');
+      console.error('Error deleting item:', err);
+      res.status(500).send('Error deleting item');
     }
   } else {
     res.status(403).send('Access denied');
