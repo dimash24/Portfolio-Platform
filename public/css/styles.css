@@ -17,6 +17,16 @@ body {
   align-items: center;
 }
 
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* Adjust the height as needed */
+}
+.carousel-inner img {
+  object-fit: cover;
+  border-radius: 8px;
+}
 
 
 

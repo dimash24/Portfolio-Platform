@@ -4,7 +4,7 @@ const multer = require('multer');
 const router = express.Router();
 const path = require('path');
 
-// Storage for uploads
+
 const storage = multer.diskStorage({
   destination: 'public/uploads/',
   filename: (req, file, cb) => {
@@ -25,7 +25,7 @@ router.get('/admin', async (req, res) => {
   }
 });
 
-// Create a portfolio item
+
 router.post('/create', upload.array('images', 3), async (req, res) => {
   if (req.session.user && (req.session.user.role === 'editor' || req.session.user.role === 'admin')) {
     const { title, description } = req.body;
@@ -42,7 +42,7 @@ router.post('/create', upload.array('images', 3), async (req, res) => {
   }
 });
 
-// Update a portfolio item
+
 router.post('/update/:id', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
     const { title, description } = req.body;
@@ -58,7 +58,7 @@ router.post('/update/:id', async (req, res) => {
   }
 });
 
-// Delete a portfolio item
+
 router.post('/delete/:id', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
     try {
